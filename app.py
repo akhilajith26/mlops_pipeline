@@ -6,6 +6,7 @@ from PIL import Image
 import numpy as np
 import uvicorn
 import boto3
+import os
 
 app = FastAPI()
 
