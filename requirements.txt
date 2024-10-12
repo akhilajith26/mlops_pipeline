@@ -6,3 +6,4 @@ tensorboard
 pillow
 requests
 python-multipart
+boto3
