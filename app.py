@@ -5,6 +5,7 @@ from model import train_model
 from PIL import Image
 import numpy as np
 import uvicorn
+import boto3
 
 app = FastAPI()
 
