@@ -1,0 +1,15 @@
+# Ignore Python cache and virtual environment files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.env
+
+# Ignore data that might be large and isn't needed for building
+data/
+logs/
+
+# Ignore local development tools
+.vscode/
+.idea/
+.DS_Store
