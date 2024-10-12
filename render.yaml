@@ -1,0 +1,17 @@
+# render.yaml
+
+services:
+  - type: web  # This defines a web service
+    name: car-damage-detector  # Name of the app (visible in Render dashboard)
+    env: docker  # Specify that this app uses Docker
+    region: oregon  # Choose a deployment region (change if needed)
+    plan: free  # Specify the free plan (you can upgrade later)
+    dockerfilePath: ./Dockerfile  # Path to the Dockerfile in the repo
+    autoDeploy: true  # Automatically deploy new changes when pushed to GitHub/GitLab
+    branch: main  # Branch to deploy from
+    healthCheckPath: /  # Set the path for health check (could be any valid FastAPI route)
+    envVars:
+      - key: ENV
+        value: production
+    buildCommand: ""
+    startCommand: ""
