@@ -1,53 +1,57 @@
-from fastapi import FastAPI, File, UploadFile
+from fastapi import FastAPI, File, UploadFile, Request, Response
 from tensorflow.keras.models import load_model
 from train_requests import TrainModel
+from fastapi.exceptions import HTTPException
+from utils import load_model
 from model import train_model
+from logger import setup_logger
 from PIL import Image
 import numpy as np
 import uvicorn
-import boto3
-import os
-import tensorflow as tf
+
 
 app = FastAPI()
 
-
-# AWS S3 configuration
-S3_BUCKET_NAME = "keras-model-bucket"
-S3_MODEL_PATH = "models/my_model.keras"
-LOCAL_MODEL_PATH = "models/my_model.keras"
-
-# Initialize S3 client
-s3 = boto3.client("s3")
+# Setup logger
+logger = setup_logger("fastapi")
 
 
-def download_model_from_s3():
-    """
-    Download the model from S3 if not already present locally.
-    """
-    if not os.path.exists(LOCAL_MODEL_PATH):
-        os.makedirs(os.path.dirname(LOCAL_MODEL_PATH), exist_ok=True)
-        print(f"Downloading model from S3: {S3_BUCKET_NAME}/{S3_MODEL_PATH}")
-        s3.download_file(S3_BUCKET_NAME, S3_MODEL_PATH, LOCAL_MODEL_PATH)
-    else:
-        print("Model already exists locally.")
+@app.middleware("http")
+async def log_requests(request: Request, call_next):
+    # Log request details
+    logger.info(f"Request URL: {request.url}")
+    logger.info(f"Request Method: {request.method}")
+    logger.info(f"Request Headers: {request.headers}")
+    # logger.info(f"Request Body: {await request.body()}")
 
+    # Process the request and get the response
+    try:
+        response: Response = await call_next(request)
 
-# Load the model
-def load_model():
-    """
-    Load the model after downloading it from S3.
-    """
-    download_model_from_s3()
-    model = tf.keras.models.load_model(LOCAL_MODEL_PATH)
-    return model
+        # Log response details
+        logger.info(f"Response status code: {response.status_code}")
+        logger.info(f"Response Headers: {response.headers}")
+
+        # Optionally log the response body (ensure it doesn't exceed a reasonable size)
+        if response.status_code == 200 and response.media_type == "application/json":
+            response_body = await response.body()
+            logger.info(f"Response Body: {response_body.decode()}")
+
+        return response
+
+    except HTTPException as exc:
+        # Log exception details
+        logger.error(f"HTTP Exception: {exc.detail}")
+        raise exc
+
+    except Exception as e:
+        # Log any unexpected errors
+        logger.error(f"Unhandled Exception: {str(e)}")
+        raise HTTPException(status_code=500, detail="Internal Server Error")
 
 
 # Load the model at startup
 model = load_model()
-
-# Load pre-trained model
-# model = load_model("models/my_model.keras")
 
 
 def preprocess_image(image: Image.Image):
@@ -89,18 +93,6 @@ async def predict(file: UploadFile = File(...)):
         # Open and preprocess image
         image = Image.open(file.file)
         image = preprocess_image(image)
-
-        # Perform prediction
-        # prediction = model.predict(image)
-
-        # # Since the prediction is an array, extract the first element
-        # predicted_value = prediction[0][0]  # Extract the scalar from the array
-
-        # # Interpret the result
-        # if predicted_value > 0.5:
-        #     result = "Damaged"
-        # else:
-        #     result = "Undamaged"
 
         # return {"prediction": result}
         prediction = model.predict(image)

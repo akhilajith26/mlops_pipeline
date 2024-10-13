@@ -24,5 +24,4 @@ services:
       - "6006:6006" # Expose TensorBoard on port 6006
     volumes:
       - ./logs:/app/logs # Mount logs folder to TensorBoard container
-    # command: tensorboard --logdir /app/logs --host 0.0.0.0 --port 6006
     command: bash -c "tensorboard --logdir /app/logs --host 0.0.0.0 --port 6006"
