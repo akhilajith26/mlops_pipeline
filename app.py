@@ -7,7 +7,7 @@ import numpy as np
 import uvicorn
 import boto3
 import os
-import tf
+import tensorflow as tf
 
 app = FastAPI()
 
