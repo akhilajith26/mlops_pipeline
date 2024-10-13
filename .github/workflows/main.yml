@@ -67,7 +67,7 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           port: 22
           script: |
-            docker pull ${{ secrets.DOCKER_USERNAME }}/car-damage-predictor:latest
-            docker stop car-damage-predictor || true
-            docker rm car-damage-predictor || true
-            docker run -d --name car-damage-predictor -p 80:8000 ${{ secrets.DOCKER_USERNAME }}/car-damage-predictor:latest
+            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/car-damage-predictor:latest
+            sudo docker stop car-damage-predictor || true
+            sudo docker rm car-damage-predictor || true
+            sudo docker run -d --name car-damage-predictor -p 80:8000 ${{ secrets.DOCKER_USERNAME }}/car-damage-predictor:latest
