@@ -65,6 +65,11 @@ import os
 tf.config.threading.set_intra_op_parallelism_threads(2)
 tf.config.threading.set_inter_op_parallelism_threads(2)
 
+# Prevent TensorFlow from preallocating all memory and instead grow it as needed
+physical_devices = tf.config.experimental.list_physical_devices("CPU")
+for device in physical_devices:
+    tf.config.experimental.set_memory_growth(device, True)
+
 
 def create_model(input_shape):
     # Load VGG16 as the base model
