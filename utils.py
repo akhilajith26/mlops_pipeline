@@ -5,8 +5,8 @@ import tensorflow as tf
 
 # AWS S3 configuration
 S3_BUCKET_NAME = "keras-model-bucket"
-S3_MODEL_PATH = "models/my_model.keras"
-LOCAL_MODEL_PATH = "models/my_model.keras"
+S3_MODEL_PATH = "models/vgg16_model.keras"
+LOCAL_MODEL_PATH = "models/vgg16_model.keras"
 
 # Initialize S3 client
 s3 = boto3.client("s3")
