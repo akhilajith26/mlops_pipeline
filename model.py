@@ -61,6 +61,10 @@ from tensorflow.keras.callbacks import TensorBoard
 from data_preprocessing import preprocess_data
 import os
 
+# Limit TensorFlow's memory usage
+tf.config.threading.set_intra_op_parallelism_threads(2)
+tf.config.threading.set_inter_op_parallelism_threads(2)
+
 
 def create_model(input_shape):
     # Load VGG16 as the base model
