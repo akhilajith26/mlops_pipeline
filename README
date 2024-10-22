@@ -28,7 +28,7 @@ MLOPS_PIPELINE/
 ├── test.py                      # Test file for testing the API (model inference)
 ├── train_requests.py            # Helper script for making API requests for training
 ├── utils.py                     # Utility functions for the project
-├── render.yaml                  # Configuration for cloud rendering or deployment (can be used to deploy the model in render)
+├── render.yaml                  # Configuration for cloud rendering or deployment
 └── api.log                      # Log file storing API request logs
 ```
 
@@ -70,6 +70,7 @@ To train the model:
 
 1. Ensure your data is in the `data/` folder structured with training and validation directories.
 2. Run the training process:
+
    ```bash
    python model.py
    ```
@@ -96,5 +97,5 @@ Use the `test.py` script to perform unit tests for the API and verify the model�
 ### CI/CD and Deployment
 
 - CI/CD is configured using GitHub Actions (in `.github`).
-- Docker images are pushed to Docker Hub
+- Docker images are pushed to Docker Hub.
 - The Docker image can be deployed to any container registry and run on cloud platforms like AWS or Google Cloud.
