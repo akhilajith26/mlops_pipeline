@@ -1,31 +1,3 @@
-# version: '3.8'
-
-# services:
-#   app:
-#     build:
-#       context: .
-#       dockerfile: Dockerfile
-#     ports:
-#       - "8000:8000" # Expose FastAPI on port 8000
-#     volumes:
-#       - .:/app # Mount the app folder from the host to the container
-#       - ./data:/app/data # Mount the data folder
-#       - ./models:/app/models # Mount the models folder
-#       - ./logs:/app/logs # Mount the logs folder
-#     environment:
-#       - LOG_DIR=/app/logs
-#       - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
-#       - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
-#     command: uvicorn app:app --host 0.0.0.0 --port 8000
-
-#   tensorboard:
-#     image: tensorflow/tensorflow:2.6.0
-#     ports:
-#       - "6006:6006" # Expose TensorBoard on port 6006
-#     volumes:
-#       - ./logs:/app/logs # Mount logs folder to TensorBoard container
-#     command: bash -c "tensorboard --logdir /app/logs --host 0.0.0.0 --port 6006"
-
 version: '3.8'
 
 services:
@@ -45,13 +17,6 @@ services:
       - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
       - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
     command: uvicorn app:app --host 0.0.0.0 --port 8000
-    deploy:
-      resources:
-        limits:
-          memory: 2g # Limit memory usage to 2 GB
-          cpus: "1.0" # Limit CPU usage to 1 core
-        reservations:
-          memory: 1g # Ensure at least 1 GB of memory is reserved for this container
 
   tensorboard:
     image: tensorflow/tensorflow:2.6.0
@@ -60,9 +25,3 @@ services:
     volumes:
       - ./logs:/app/logs # Mount logs folder to TensorBoard container
     command: bash -c "tensorboard --logdir /app/logs --host 0.0.0.0 --port 6006"
-    deploy:
-      resources:
-        limits:
-          memory: 1g # Limit memory usage to 1 GB for TensorBoard
-        reservations:
-          memory: 512m # Ensure at least 512 MB of memory is reserved for this container
