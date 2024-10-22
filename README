@@ -1,8 +1,8 @@
-### MLOps Pipeline Project
+# MLOps Pipeline Project
 
 This project demonstrates an end-to-end machine learning pipeline for a computer vision problem, specifically classifying images of damaged and undamaged cars. The model is built using TensorFlow, containerized using Docker, and ready for deployment. The pipeline automates data preprocessing, model training, logging, and model serving via a FastAPI-based REST API.
 
-### Project Structure
+## Project Structure
 
 ```bash
 MLOPS_PIPELINE/
@@ -32,7 +32,7 @@ MLOPS_PIPELINE/
 └── api.log                      # Log file storing API request logs
 ```
 
-### Key Components
+## Key Components
 
 - **`app.py`**: Contains the FastAPI app that serves the model via a REST API. It accepts an image and returns whether the car is damaged or not.
 - **`data_preprocessing.py`**: Handles image preprocessing using Keras `ImageDataGenerator` for data augmentation and splitting data into training and validation sets.
@@ -42,7 +42,7 @@ MLOPS_PIPELINE/
 - **`Dockerfile`**: Docker configuration for containerizing the FastAPI application and model inference.
 - **`mlops_pipeline.ipynb`**: Jupyter notebook for additional experimentation and debugging.
 
-### Instructions
+## Instructions
 
 #### 1. Set Up Environment
 
