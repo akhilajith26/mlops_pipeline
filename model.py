@@ -53,30 +53,91 @@
 # # if __name__ == "__main__":
 # #     train_model()
 
+# import tensorflow as tf
+# from tensorflow.keras.applications import VGG16  # Use VGG16 instead of ResNet50
+# from tensorflow.keras.optimizers import RMSprop
+# from tensorflow.keras.models import Model
+# from tensorflow.keras.callbacks import TensorBoard
+# from data_preprocessing import preprocess_data
+# import os
+
+# # Limit TensorFlow's memory usage
+# tf.config.threading.set_intra_op_parallelism_threads(2)
+# tf.config.threading.set_inter_op_parallelism_threads(2)
+
+
+# def create_model(input_shape):
+#     # Load VGG16 as the base model
+#     base_model = VGG16(input_shape=input_shape, include_top=False, weights="imagenet")
+
+#     # Add custom layers on top of VGG16
+#     x = tf.keras.layers.Flatten()(base_model.output)
+#     x = tf.keras.layers.Dense(512, activation="relu")(x)
+#     x = tf.keras.layers.Dense(1, activation="sigmoid")(
+#         x
+#     )  # Binary classification output
+
+#     model = Model(base_model.input, x)
+
+#     # Freeze all the layers in VGG16 (so they don't get updated during training)
+#     for layer in base_model.layers:
+#         layer.trainable = False
+
+#     # Compile the model
+#     model.compile(
+#         loss="binary_crossentropy",
+#         optimizer=RMSprop(learning_rate=1e-4),
+#         metrics=["Accuracy", "Precision", "Recall"],
+#     )
+
+#     return model
+
+
+# def train_model(
+#     epochs=5, output_size=(224, 224), batch_size=32, version=1, log_dir="logs"
+# ):
+#     # Preprocess data
+#     train_data, val_data = preprocess_data(output_size, batch_size=batch_size)
+
+#     # Create the model using VGG16
+#     model = create_model(input_shape=(224, 224, 3))
+
+#     # TensorBoard for logging
+#     tensorboard = TensorBoard(log_dir=log_dir)
+
+#     # Train the model
+#     model.fit(
+#         train_data, validation_data=val_data, epochs=epochs, callbacks=[tensorboard]
+#     )
+
+#     # Save the trained model
+#     model.save(f"models/car_damage_model_{version}.keras")
+
+#     return {"status": "Model trained and saved"}
+
+
+# Uncomment below to run the training directly if running standalone
+# if __name__ == "__main__":
+#     train_model()
+
+
 import tensorflow as tf
-from tensorflow.keras.applications import VGG16  # Use VGG16 instead of ResNet50
+from tensorflow.keras.applications import MobileNetV2
 from tensorflow.keras.optimizers import RMSprop
 from tensorflow.keras.models import Model
 from tensorflow.keras.callbacks import TensorBoard
 from data_preprocessing import preprocess_data
 import os
 
-# Limit TensorFlow's memory usage
-tf.config.threading.set_intra_op_parallelism_threads(2)
-tf.config.threading.set_inter_op_parallelism_threads(2)
-
-# Prevent TensorFlow from preallocating all memory and instead grow it as needed
-physical_devices = tf.config.experimental.list_physical_devices("CPU")
-for device in physical_devices:
-    tf.config.experimental.set_memory_growth(device, True)
-
 
 def create_model(input_shape):
-    # Load VGG16 as the base model
-    base_model = VGG16(input_shape=input_shape, include_top=False, weights="imagenet")
+    # Load MobileNetV2 as the base model
+    base_model = MobileNetV2(
+        input_shape=input_shape, include_top=False, weights="imagenet"
+    )
 
-    # Add custom layers on top of VGG16
-    x = tf.keras.layers.Flatten()(base_model.output)
+    # Add custom layers on top of MobileNetV2
+    x = tf.keras.layers.GlobalAveragePooling2D()(base_model.output)
     x = tf.keras.layers.Dense(512, activation="relu")(x)
     x = tf.keras.layers.Dense(1, activation="sigmoid")(
         x
@@ -84,7 +145,7 @@ def create_model(input_shape):
 
     model = Model(base_model.input, x)
 
-    # Freeze all the layers in VGG16 (so they don't get updated during training)
+    # Freeze all the layers in MobileNetV2 (so they don't get updated during training)
     for layer in base_model.layers:
         layer.trainable = False
 
@@ -104,7 +165,7 @@ def train_model(
     # Preprocess data
     train_data, val_data = preprocess_data(output_size, batch_size=batch_size)
 
-    # Create the model using VGG16
+    # Create the model using MobileNetV2
     model = create_model(input_shape=(224, 224, 3))
 
     # TensorBoard for logging
