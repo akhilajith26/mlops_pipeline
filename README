@@ -98,5 +98,3 @@ Use the `test.py` script to perform unit tests for the API and verify the modelâ
 - CI/CD is configured using GitHub Actions (in `.github`).
 - Docker images are pushed to Docker Hub
 - The Docker image can be deployed to any container registry and run on cloud platforms like AWS or Google Cloud.
-
----
